@@ -1,12 +1,20 @@
+// © Tobias Reincke, Rostock, 13.1.20
 #include <iostream>
 #include <string>
 #include <vector>
+
 using namespace std; 
 
+int sonder = 100;
 void printvektor(int a[], int size )
 {   cout <<" { ";
     for (int i = 0; i<size; i++)
-    {
+    {   
+        if (a[i]==sonder)
+        {
+            cout<<(char) 157 <<" ";
+            continue;
+        }
         cout<<a[i]<<" ";
     }
     cout <<"}\n ";
@@ -26,9 +34,11 @@ bool checksyphon(int a[],int size)
     {
        if(a[i]>0)
        {
+           if(a[i]==100) continue;
            cout<<i<<" "; 
            syph= false;
        }
+
     }
     if(syph)cout<<"Keine. Ist Syphon.";
     cout<<endl;
@@ -47,7 +57,8 @@ bool checktrap(int a[],int size)
     for(int i = 0; i < size ; i++)
     {
        if(a[i]<0)
-       {
+       {   
+           if(a[i]==100) continue;
            cout<<i<<" "; 
            syph= false;
        }
@@ -59,15 +70,19 @@ bool checktrap(int a[],int size)
 
 int* vectoradd(int a[], int b[], int size )
 {   
+    
     int* c  ;
+   
     c =(int *) malloc(size +1); 
     printvektor(a,size);
     cout<<"+\n";
     printvektor(b,size);
 
     for (int i = 0 ; i<size;i++)
-    {   
-        if(a[i]==b[i])c[i]=a[i];  //emulating set unions
+    {   // 
+        if(a[i]==b[i])c[i]=a[i];
+        else if(a[i]!=b[i] && (a[i]!=0&&b[i]!=0)) c[i]=sonder; //if none of the values equals zero and both are different -> they cancel each other out; using sonderzeichen for this  //emulating set unions
+        else if(a[i]==sonder || b[i]==sonder) c[i]=sonder;  //the transtion already got canceled from the union
         else c[i]=a[i]+b[i];
     }
     cout<<"=\n";
@@ -91,7 +106,8 @@ int* vectorsub(int a[], int b[], int size )
     printvektor(c,size);
     return c;
 }
-
+//Das Programm funktioniert nicht unter der Vorraussetzung, dass es keine Kreise gibt, wo ein und diesselbe Transition von der Stelle nimmt und auf die Stelle packt
+//Wenn es solche Kreise gibt, muss dem entprechend per Sonderzeichen initialisiert werden.
 int main()
 {   int* temp;
     int* temptemp;
